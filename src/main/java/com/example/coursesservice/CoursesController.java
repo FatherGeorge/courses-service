@@ -38,10 +38,13 @@ public class CoursesController {
     Response addCourse(@RequestBody Optional<Course> courseOptional) {
         if(!courseOptional.isPresent())
             return new Response().setStatusCode("1").setStatusDesc("Bad request. Incorrect request data");
-        Course courseTOAdd = courseOptional.get();
-        final Optional<Course> course = coursesService.findCourseByName(courseTOAdd.getName());
+        Course courseToAdd = courseOptional.get();
+
+        final Optional<Course> course = coursesService.findCourseByName(courseToAdd.getName());
         if(course.isPresent())
             return new Response().setStatusCode("2").setStatusDesc("Course already exists");
-        return null;
+
+        Course savedCourse = coursesService.addCourse(courseToAdd);
+        return new Response().setStatusCode("0").setStatusDesc("Ok").setCourse(savedCourse);
     }
 }

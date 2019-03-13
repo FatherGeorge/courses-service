@@ -130,4 +130,27 @@ public final class CoursesControllerTest {
         assertThat(actual.getStatusDesc(), is("Course already exists"));
     }
 
+    @Test
+    public void addCourseReturns0() throws Exception {
+        // Setup
+        Course course = new Course("springBoot", "mandatory course for java engineer");
+
+        when(coursesService.findCourseByName(anyString())).thenReturn(Optional.empty());
+        when(coursesService.addCourse(course)).thenReturn(course);
+
+        // Exercise and assert
+        String actualString = mockMvc.perform(post("/course")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(OBJECT_MAPPER.writeValueAsString(course)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Response actual = OBJECT_MAPPER.readValue(actualString, Response.class);
+
+        // Assert
+        assertThat(actual.getStatusCode(), is("0"));
+        assertThat(actual.getStatusDesc(), is("Ok"));
+    }
+
 }

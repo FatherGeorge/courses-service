@@ -22,5 +22,10 @@ public class CoursesServiceImpl implements CoursesService {
         return Optional.empty();
     }
 
+    @Override
+    public Course addCourse(Course courseToAdd) {
+        return null;
+    }
+
 
 }

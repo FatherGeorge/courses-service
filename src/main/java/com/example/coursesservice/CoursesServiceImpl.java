@@ -19,7 +19,7 @@ public class CoursesServiceImpl implements CoursesService {
 
     @Override
     public Optional<Course> findCourseByName(String name) {
-        return Optional.empty();
+        return coursesRepository.findCourseByName(name);
     }
 
     @Override

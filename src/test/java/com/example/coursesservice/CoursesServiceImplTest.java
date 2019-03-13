@@ -85,4 +85,19 @@ public final class CoursesServiceImplTest {
         // Assert
         assertThat(actual.get(), is(expected));
     }
+
+    @Test
+    public void  addCourseSavesCourse() {
+        // Setup
+        Course expected = new Course("react");
+        coursesRepository.save(expected);
+
+        // Execute
+        Course actual = coursesRepository.save(expected);
+        Iterable<Course> listCourses = coursesRepository.findAll();
+
+        // Assert
+        assertThat(actual, is(expected));
+        assertThat(listCourses.spliterator().getExactSizeIfKnown(), is(1L));
+    }
 }

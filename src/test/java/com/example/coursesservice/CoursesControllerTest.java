@@ -2,7 +2,9 @@ package com.example.coursesservice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -11,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -66,24 +69,39 @@ public final class CoursesControllerTest {
     }
 
     @Test
-    public void getReturnsListOfCourses() throws Exception {
+    public void getReturnsListOfCoursesStatus0() throws Exception {
         // Setup
         Course course = new Course("springBoot", "mandatory course for java engineer");
         List<Course> courses = new ArrayList<>();
         courses.add(course);
+        Response expectedResponse = new Response();
+        expectedResponse.setStatusCode("0");
+        expectedResponse.setStatusDesc("Ok");
+        expectedResponse.setCourses(courses);
 
         when(coursesService.listCourses()).thenReturn(courses);
         // Execute
         String actualString = mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
 
-        List<Course> actual = OBJECT_MAPPER.readValue(actualString, new TypeReference<List<Course>>(){});
+        Response actual = OBJECT_MAPPER.readValue(actualString, Response.class);
 
         // Assert
-        assertThat(actual.get(0), is(course));
+        assertThat(actual.getCourses().get(0), is(course));
+    }
+
+    @Test
+    @Ignore
+    public void addCourseReturns400IfNoCourseNameIsSupplied() throws Exception {
+        // Setup
+
+        // Exercise and assert
+        mockMvc.perform(post("/course")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason(is("Course name is Required")));
     }
 
 }

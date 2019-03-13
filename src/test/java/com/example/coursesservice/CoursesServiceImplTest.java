@@ -39,7 +39,23 @@ public final class CoursesServiceImplTest {
 
         // Execute
         Iterable<Course> actual = coursesService.listCourses();
+
         // Assert
         assertThat(actual, is(Collections.EMPTY_LIST));
     }
+
+    @Test
+    public void  listCoursesReturnsList() {
+        // Setup
+        Course expected = new Course("react");
+        coursesRepository.save(expected);
+
+        // Execute
+        Iterable<Course> actual = coursesService.listCourses();
+
+        // Assert
+        assertThat(actual.iterator().next(), is(expected));
+    }
+
+
 }

@@ -18,7 +18,7 @@ public class CoursesController {
     }
 
     @GetMapping("/")
-    List<Course> listCourses() {
+    Iterable<Course> listCourses() {
         return coursesService.listCourses();
     }
 }

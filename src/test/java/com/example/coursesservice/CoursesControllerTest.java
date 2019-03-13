@@ -68,7 +68,7 @@ public final class CoursesControllerTest {
     @Test
     public void getReturnsListOfCourses() throws Exception {
         // Setup
-        Course course = new Course(1L, "springBoot", "mandatory course for java engineer");
+        Course course = new Course("springBoot", "mandatory course for java engineer");
         List<Course> courses = new ArrayList<>();
         courses.add(course);
 

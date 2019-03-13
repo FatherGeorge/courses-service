@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CoursesServiceImpl implements CoursesService {
@@ -15,4 +16,11 @@ public class CoursesServiceImpl implements CoursesService {
     public Iterable<Course> listCourses() {
         return coursesRepository.findAll();
     }
+
+    @Override
+    public Optional<Course> findCourseByName(String name) {
+        return Optional.empty();
+    }
+
+
 }

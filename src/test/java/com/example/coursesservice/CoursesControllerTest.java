@@ -16,13 +16,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -74,10 +75,6 @@ public final class CoursesControllerTest {
         Course course = new Course("springBoot", "mandatory course for java engineer");
         List<Course> courses = new ArrayList<>();
         courses.add(course);
-        Response expectedResponse = new Response();
-        expectedResponse.setStatusCode("0");
-        expectedResponse.setStatusDesc("Ok");
-        expectedResponse.setCourses(courses);
 
         when(coursesService.listCourses()).thenReturn(courses);
         // Execute
@@ -90,18 +87,47 @@ public final class CoursesControllerTest {
 
         // Assert
         assertThat(actual.getCourses().get(0), is(course));
+        assertThat(actual.getStatusCode(), is("0"));
+        assertThat(actual.getStatusDesc(), is("Ok"));
     }
 
     @Test
-    @Ignore
-    public void addCourseReturns400IfNoCourseNameIsSupplied() throws Exception {
+    public void addCourseReturnsCode1IfNoCourseNameIsSupplied() throws Exception {
         // Setup
 
         // Exercise and assert
-        mockMvc.perform(post("/course")
+        String actualString = mockMvc.perform(post("/course")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(status().reason(is("Course name is Required")));
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Response actual = OBJECT_MAPPER.readValue(actualString, Response.class);
+
+        // Assert
+        assertThat(actual.getStatusCode(), is("1"));
+        assertThat(actual.getStatusDesc(), is("Bad request. Incorrect request data"));
+    }
+
+    @Test
+    public void addCourseReturnsCode2IfCourseAlreadyExists() throws Exception {
+        // Setup
+        Course course = new Course("springBoot", "mandatory course for java engineer");
+
+        when(coursesService.findCourseByName(anyString())).thenReturn(Optional.of(course));
+        // Exercise and assert
+        String actualString = mockMvc.perform(post("/course")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(OBJECT_MAPPER.writeValueAsString(course)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Response actual = OBJECT_MAPPER.readValue(actualString, Response.class);
+
+        // Assert
+        assertThat(actual.getStatusCode(), is("2"));
+        assertThat(actual.getStatusDesc(), is("Course already exists"));
     }
 
 }

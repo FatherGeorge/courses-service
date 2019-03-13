@@ -8,35 +8,39 @@ public class Response {
     private List<Course> courses;
     private Course course;
 
-    public void setStatusCode(String statusCode) {
+    public Response setStatusCode(String statusCode) {
         this.statusCode = statusCode;
+        return this;
     }
 
     public String getStatusCode() {
         return statusCode;
     }
 
-    public void setStatusDesc(String statusDesc) {
+    public Response setStatusDesc(String statusDesc) {
         this.statusDesc = statusDesc;
+        return this;
     }
 
     public String getStatusDesc() {
         return statusDesc;
     }
 
-    public void setCourses(List<Course> courses) {
+    public Response setCourses(List<Course> courses) {
         this.courses = courses;
+        return this;
     }
 
     public List<Course> getCourses() {
         return courses;
     }
 
-    public Course getCourse() {
-        return course;
+    public Response setCourse(Course course) {
+        this.course = course;
+        return this;
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
+    public Course getCourse() {
+        return course;
     }
 }

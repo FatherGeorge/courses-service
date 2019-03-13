@@ -34,8 +34,14 @@ public class CoursesController {
         return response;
     }
 
-/*    @PostMapping("/course")
-    Course addCourse(@RequestBody Optional<Course> courseOptional) {
-
-    }*/
+    @PostMapping("/course")
+    Response addCourse(@RequestBody Optional<Course> courseOptional) {
+        if(!courseOptional.isPresent())
+            return new Response().setStatusCode("1").setStatusDesc("Bad request. Incorrect request data");
+        Course courseTOAdd = courseOptional.get();
+        final Optional<Course> course = coursesService.findCourseByName(courseTOAdd.getName());
+        if(course.isPresent())
+            return new Response().setStatusCode("2").setStatusDesc("Course already exists");
+        return null;
+    }
 }

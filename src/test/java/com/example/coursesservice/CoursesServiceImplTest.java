@@ -2,7 +2,6 @@ package com.example.coursesservice;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ public final class CoursesServiceImplTest {
     }
 
     @Test
-    public void  listCoursesReturnsEmptyList() {
+    public void listCoursesReturnsEmptyList() {
         // Setup
 
         // Execute
@@ -48,7 +47,7 @@ public final class CoursesServiceImplTest {
     }
 
     @Test
-    public void  listCoursesReturnsList() {
+    public void listCoursesReturnsList() {
         // Setup
         Course expected = new Course("react");
         coursesRepository.save(expected);
@@ -61,7 +60,7 @@ public final class CoursesServiceImplTest {
     }
 
     @Test
-    public void  findCourseByNameReturnsEmptyOptional() {
+    public void findCourseByNameReturnsEmptyOptional() {
         // Setup
         Course expected = new Course("react");
         coursesRepository.save(expected);
@@ -74,7 +73,7 @@ public final class CoursesServiceImplTest {
     }
 
     @Test
-    public void  findCourseByNameReturnsCourse() {
+    public void findCourseByNameReturnsCourse() {
         // Setup
         Course expected = new Course("react");
         coursesRepository.save(expected);
@@ -87,17 +86,33 @@ public final class CoursesServiceImplTest {
     }
 
     @Test
-    public void  addCourseSavesCourse() {
+    public void saveCourseSavesCourse() {
+        // Setup
+        Course expected = new Course("react");
+        coursesService.saveCourse(expected);
+
+        // Execute
+        Optional<Course> actual = coursesService.findCourseByName("react");
+
+        Iterable<Course> listCourses = coursesRepository.findAll();
+
+        // Assert
+        assertThat(actual.get(), is(expected));
+        assertThat(listCourses.spliterator().getExactSizeIfKnown(), is(1L));
+    }
+
+    @Test
+    public void deleteCourse() {
         // Setup
         Course expected = new Course("react");
         coursesRepository.save(expected);
 
         // Execute
-        Course actual = coursesRepository.save(expected);
+        coursesService.deleteCourseByName("react");
+
         Iterable<Course> listCourses = coursesRepository.findAll();
 
         // Assert
-        assertThat(actual, is(expected));
-        assertThat(listCourses.spliterator().getExactSizeIfKnown(), is(1L));
+        assertThat(listCourses.spliterator().getExactSizeIfKnown(), is(0L));
     }
 }

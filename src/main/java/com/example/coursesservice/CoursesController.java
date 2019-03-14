@@ -1,10 +1,7 @@
 package com.example.coursesservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,17 +31,35 @@ public class CoursesController {
         return response;
     }
 
-    @PostMapping("/course")
-    Response addCourse(@RequestBody Optional<Course> courseOptional) {
-        if(!courseOptional.isPresent())
-            return new Response().setStatusCode("1").setStatusDesc("Bad request. Incorrect request data");
-        Course courseToAdd = courseOptional.get();
-
+    @PostMapping("/")
+    Response addCourse(@RequestBody Course courseToAdd) {
         final Optional<Course> course = coursesService.findCourseByName(courseToAdd.getName());
-        if(course.isPresent())
+        if (course.isPresent())
             return new Response().setStatusCode("2").setStatusDesc("Course already exists");
 
-        Course savedCourse = coursesService.addCourse(courseToAdd);
+        Course savedCourse = coursesService.saveCourse(courseToAdd);
         return new Response().setStatusCode("0").setStatusDesc("Ok").setCourse(savedCourse);
+    }
+
+    @DeleteMapping("/")
+    Response deketeCourse(@RequestBody Course courseToDelete) {
+        final Optional<Course> course = coursesService.findCourseByName(courseToDelete.getName());
+        if (!course.isPresent())
+            return new Response().setStatusCode("3").setStatusDesc("Course doesn't exist");
+
+        coursesService.deleteCourseByName(courseToDelete.getName());
+
+        return new Response().setStatusCode("0").setStatusDesc("Ok");
+    }
+
+    @PutMapping("/")
+    Response changeCourseName(@RequestBody Course courseToChange) {
+        final Optional<Course> course = coursesService.findCourseByName(courseToChange.getName());
+        if (!course.isPresent())
+            return new Response().setStatusCode("3").setStatusDesc("Course doesn't exist");
+
+        coursesService.saveCourse(courseToChange);
+
+        return new Response().setStatusCode("0").setStatusDesc("Ok");
     }
 }

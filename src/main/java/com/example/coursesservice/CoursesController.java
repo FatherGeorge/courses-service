@@ -53,7 +53,7 @@ public class CoursesController {
     }
 
     @PutMapping("/")
-    Response changeCourseName(@RequestBody Course courseToChange) {
+    Response changeCourseDescription(@RequestBody Course courseToChange) {
         final Optional<Course> course = coursesService.findCourseByName(courseToChange.getName());
         if (!course.isPresent())
             return new Response().setStatusCode("3").setStatusDesc("Course doesn't exist");

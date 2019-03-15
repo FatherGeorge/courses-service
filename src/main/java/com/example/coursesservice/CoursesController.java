@@ -19,6 +19,7 @@ public class CoursesController {
     }
 
     @GetMapping("/")
+    @CrossOrigin
     Response listCourses() {
         Iterable<Course> courses = coursesService.listCourses();
         Response response = new Response();
@@ -32,6 +33,7 @@ public class CoursesController {
     }
 
     @PostMapping("/")
+    @CrossOrigin
     Response addCourse(@RequestBody Course courseToAdd) {
         final Optional<Course> course = coursesService.findCourseByName(courseToAdd.getName());
         if (course.isPresent())
@@ -42,6 +44,7 @@ public class CoursesController {
     }
 
     @DeleteMapping("/")
+    @CrossOrigin
     Response deketeCourse(@RequestBody Course courseToDelete) {
         final Optional<Course> course = coursesService.findCourseByName(courseToDelete.getName());
         if (!course.isPresent())
@@ -53,6 +56,7 @@ public class CoursesController {
     }
 
     @PutMapping("/")
+    @CrossOrigin
     Response changeCourseDescription(@RequestBody Course courseToChange) {
         final Optional<Course> course = coursesService.findCourseByName(courseToChange.getName());
         if (!course.isPresent())

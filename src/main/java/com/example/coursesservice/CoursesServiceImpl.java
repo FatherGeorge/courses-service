@@ -28,6 +28,6 @@ public class CoursesServiceImpl implements CoursesService {
 
     @Override
     public void deleteCourseByName(String name) {
-        coursesRepository.deleteCourseByName(name);
+        coursesRepository.deleteCoursesByName(name);
     }
 }

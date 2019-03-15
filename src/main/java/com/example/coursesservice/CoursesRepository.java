@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface CoursesRepository extends CrudRepository<Course, Long> {
     Optional<Course> findCourseByName(String name);
-
+    
     @Transactional
-    void deleteCourseByName(String name);
+    void deleteCoursesByName(String name);
 }

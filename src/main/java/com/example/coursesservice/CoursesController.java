@@ -57,6 +57,7 @@ public class CoursesController {
         final Optional<Course> course = coursesService.findCourseByName(courseToChange.getName());
         if (!course.isPresent())
             return new Response().setStatusCode("3").setStatusDesc("Course doesn't exist");
+        courseToChange.setId(course.get().getId());
 
         coursesService.saveCourse(courseToChange);
 
